@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ajtube/CustomSearchDelegate.dart';
 
 import 'package:flutter_ajtube/Screens/Biblioteca.dart';
 import 'package:flutter_ajtube/Screens/EmAlta.dart';
@@ -12,16 +13,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var _currentIndex = 0;
-
-  List<Widget> _telas = [
-    Inicio(),
-    EmAlta(),
-    Inscricao(),
-    Biblioteca(),
-  ];
+  String _resultado = '';
 
   @override
   Widget build(BuildContext context) {
+    print('build Home');
+    List<Widget> _telas = [
+      Inicio(_resultado),
+      EmAlta(),
+      Inscricao(),
+      Biblioteca(),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -35,20 +38,31 @@ class _HomeState extends State<Home> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.videocam),
-            onPressed: () {},
-          ),
-          IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () async {
+              String res = await showSearch(
+                  context: context, delegate: CustomSearchDelegate());
+              print('on search $res');
+              setState(() {
+                _resultado = res;
+              });
+            },
           ),
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {},
-          ),
+
+          // IconButton(
+          //   icon: Icon(Icons.videocam),
+          //   onPressed: () {},
+          // ),
+          // IconButton(
+          //   icon: Icon(Icons.account_circle),
+          //   onPressed: () {},
+          // ),
         ],
       ),
-      body: _telas[_currentIndex],
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: _telas[_currentIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (value) {
