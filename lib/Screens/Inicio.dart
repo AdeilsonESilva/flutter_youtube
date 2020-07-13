@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ajtube/CONFIG.dart';
 import 'package:flutter_ajtube/models/Video.dart';
+import 'package:flutter_youtube/flutter_youtube.dart';
 
 import '../services/Api.dart';
 
@@ -21,7 +23,33 @@ class _InicioState extends State<Inicio> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    print('chamado 1 - initState');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('chamado 2 - didChangeDependencies');
+  }
+
+  @override
+  void didUpdateWidget(Inicio oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('chamado 2 - didUpdateWidget');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print('chamado 4 - dispose');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('chamado 3 - build');
+
     return FutureBuilder<List<Video>>(
       future: _listarVideo(widget.pesquisa),
       builder: (context, snapshot) {
@@ -41,22 +69,32 @@ class _InicioState extends State<Inicio> {
 
             return ListView.separated(
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: <Widget>[
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(snapshot.data[index].imagem),
+                  return GestureDetector(
+                    onTap: () {
+                      FlutterYoutube.playYoutubeVideoById(
+                        apiKey: Config.CHAVE_YOUTUBE_API,
+                        videoId: snapshot.data[index].id,
+                        autoPlay: true,
+                        fullScreen: true,
+                      );
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(snapshot.data[index].imagem),
+                            ),
                           ),
                         ),
-                      ),
-                      ListTile(
-                        title: Text(snapshot.data[index].titulo),
-                        subtitle: Text(snapshot.data[index].canal),
-                      )
-                    ],
+                        ListTile(
+                          title: Text(snapshot.data[index].titulo),
+                          subtitle: Text(snapshot.data[index].canal),
+                        )
+                      ],
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) => Divider(

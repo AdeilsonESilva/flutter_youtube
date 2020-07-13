@@ -15,22 +15,23 @@ class Api {
         '&channelId=${Config.ID_CANAL}'
         '&q=$pesquisa');
 
-    print('${Config.URL_BASE}/search'
-        '?part=snippet'
-        '&type=video'
-        '&maxResults=20'
-        '&order=date'
-        '&key=${Config.CHAVE_YOUTUBE_API}'
-        '&channelId=${Config.ID_CANAL}'
-        '&q=$pesquisa');
+    // print('${Config.URL_BASE}/search'
+    //     '?part=snippet'
+    //     '&type=video'
+    //     '&maxResults=20'
+    //     '&order=date'
+    //     '&key=${Config.CHAVE_YOUTUBE_API}'
+    //     '&channelId=${Config.ID_CANAL}'
+    //     '&q=$pesquisa');
 
     print(response.statusCode);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> dadosJson = json.decode(response.body);
 
-      List<Video> videos =
-          dadosJson['items'].map<Video>((video) => Video.fromJson(video));
+      List<Video> videos = dadosJson['items']
+          .map<Video>((video) => Video.fromJson(video))
+          .toList();
 
       return videos;
 
